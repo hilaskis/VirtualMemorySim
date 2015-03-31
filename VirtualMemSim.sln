@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualMemSim", "VirtualMemSim\VirtualMemSim.csproj", "{A444235F-7D9D-4D92-9735-D2D122FF3663}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualMemSimConsole", "VirtualMemSimConsole\VirtualMemSimConsole.csproj", "{34016F67-F8AC-4E20-8D99-D8C64C73E585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualMemLib", "ClassLibrary1\VirtualMemLib.csproj", "{3CECDFDA-9125-469B-9116-1A5779216797}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A444235F-7D9D-4D92-9735-D2D122FF3663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A444235F-7D9D-4D92-9735-D2D122FF3663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A444235F-7D9D-4D92-9735-D2D122FF3663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A444235F-7D9D-4D92-9735-D2D122FF3663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34016F67-F8AC-4E20-8D99-D8C64C73E585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34016F67-F8AC-4E20-8D99-D8C64C73E585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34016F67-F8AC-4E20-8D99-D8C64C73E585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34016F67-F8AC-4E20-8D99-D8C64C73E585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CECDFDA-9125-469B-9116-1A5779216797}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CECDFDA-9125-469B-9116-1A5779216797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CECDFDA-9125-469B-9116-1A5779216797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CECDFDA-9125-469B-9116-1A5779216797}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
