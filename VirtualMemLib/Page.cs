@@ -13,29 +13,29 @@ namespace VirtualMemLib
     public class Page : INotifyPropertyChanged
     {
         #region Member Variables
-        private int _Frame;
-        private bool _Valid;
+        private int _FrameIndex;
+        private bool _Resident;
         #endregion
 
         public Page()
         {
-            _Frame = -1;
-            _Valid = false;
+            _FrameIndex = -1;
+            _Resident = false;
         }
 
         #region Properties
         /// <summary>
         /// The physical memory frame where the page is located.
         /// </summary>
-        public int Frame
+        public int FrameIndex
         {
             get
             {
-                return _Frame;
+                return _FrameIndex;
             }
             set
             {
-                _Frame = value;
+                _FrameIndex = value;
                 OnPropertyChanged("Frame");
             }
         }
@@ -43,15 +43,15 @@ namespace VirtualMemLib
         /// <summary>
         /// Valid bit used to determine if page is already loaded into physical memory
         /// </summary>
-        public bool Valid
+        public bool Resident
         {
             get
             {
-                return _Valid;
+                return _Resident;
             }
             set
             {
-                _Valid = value;
+                _Resident = value;
                 OnPropertyChanged("Valid");
             }
         }

@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Frame.cs" />
+    <Compile Include="FrameTable.cs" />
+    <Compile Include="MemoryManager.cs" />
+    <Compile Include="OSKernel.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="PCB.cs" />
     <Compile Include="ProcessTable.cs" />
