@@ -3,7 +3,7 @@ using VirtualMemLib;
 
 namespace VirtualMemSimConsole
 {
-    class StartMain
+    public class StartMain
     {
         static int NumPages = 64;
         static string InputFile = @"C:\Programs\VirtualMemSim\input3a.data";
