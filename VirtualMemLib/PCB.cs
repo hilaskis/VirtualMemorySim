@@ -27,6 +27,10 @@ namespace VirtualMemLib
         {
             ProcessID = procName;
             _PageTable = new Page[tableSize];
+            for (int i = 0; i < tableSize; i++)
+            {
+                _PageTable[i] = new Page();
+            }
            // _TableSize = tableSize;
         }
 
@@ -35,6 +39,7 @@ namespace VirtualMemLib
         public Page[] PageTable
         {
             get { return _PageTable; }
+            set { _PageTable = value; }
         }
 
         /// <summary>

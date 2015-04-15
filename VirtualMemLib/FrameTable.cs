@@ -11,7 +11,6 @@ namespace VirtualMemLib
     {
         private Frame[] _Table;
         private int _TableSize;
-       // private List<int> _FreeFrames;
 
         public FrameTable(int tableSize)
         {
@@ -26,7 +25,7 @@ namespace VirtualMemLib
         public Frame[] Table
         {
             get { return _Table; }
-            private set { _Table = value; }
+            set { _Table = value; }
         }
 
         public Frame this[int index]

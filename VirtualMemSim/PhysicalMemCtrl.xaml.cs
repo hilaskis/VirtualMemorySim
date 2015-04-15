@@ -12,28 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VirtualMemLib;
 
 namespace VirtualMemSim
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PhysicalMemCtrl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PhysicalMemCtrl : UserControl
     {
-        private OSKernel _Kernel;
-        public MainWindow()
+        public PhysicalMemCtrl()
         {
             InitializeComponent();
-            _Kernel = new OSKernel(@"C:\Programs\VirtualMemSim\input3a.data");
-            this.DataContext = _Kernel;
         }
-
-        private void nextButton_Click(object sender, RoutedEventArgs e)
-        {
-            _Kernel.NextLine();
-        }
-
-
     }
 }

@@ -19,6 +19,18 @@ namespace VirtualMemLib
             _FrameTable = new FrameTable(FRAME_TABLE_SIZE);
         }
 
+        public FrameTable FrameTable
+        {
+            get
+            {
+                return _FrameTable;
+            }
+            private set
+            {
+                _FrameTable = value;
+            }
+        }
+
         /// <summary>
         /// Get the frame that goes with a particular page's process if it is in memory.
         /// </summary>

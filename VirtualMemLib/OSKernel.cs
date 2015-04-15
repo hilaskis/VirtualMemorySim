@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace VirtualMemLib
 {
-    public class OSKernel
+    public class OSKernel : INotifyPropertyChanged
     {
         static int NUM_PAGES = 64;
         private ProcessTable _ProcessTable;
@@ -19,9 +21,41 @@ namespace VirtualMemLib
 
         public OSKernel(string inputFile)
         {
-            _MMU = new MemoryManager();
+            MMU = new MemoryManager();
             _ProcessTable = new ProcessTable();
             _Reader = new StreamReader(inputFile);
+        }
+
+        public bool CanGetNextLine
+        {
+            get
+            {
+                return _Reader.EndOfStream;
+            }
+
+        }
+
+        public PCB CurrentProcess
+        {
+            get { return _CurrentProcess; }
+            private set
+            { 
+                _CurrentProcess = value;
+                OnPropertyChanged("CurrentProcess");
+            }
+        }
+
+        public MemoryManager MMU
+        {
+            get
+            {
+                return _MMU;
+            }
+            private set
+            {
+                _MMU = value;
+                OnPropertyChanged("MMU");
+            }
         }
 
         public bool NextLine()
@@ -29,9 +63,10 @@ namespace VirtualMemLib
             string[] tokStr;
             char[] delimiters = {' ', '\t', ':'};
             string line;
-            // Check if the end of the file stream has been reached
+            // Returns false if the end of the file has been reached
             if (_Reader.EndOfStream)
             {
+                _Reader.Close();
                 return false;
             }
 
@@ -47,6 +82,11 @@ namespace VirtualMemLib
             return true;
         }
 
+        /// <summary>
+        /// Sets the resident flag of the given process's page to false
+        /// </summary>
+        /// <param name="process">The process the page belongs to</param>
+        /// <param name="page">The page number/id</param>
         private void ResetResident(string process, int page)
         {
             PCB temp;
@@ -78,9 +118,10 @@ namespace VirtualMemLib
                 Debug.Print("The page number {0} is outside the virtual address space\n", page);
                 return;
             }
-            // Set the current process to the process making a memory reference (kind of like a context switch)
-            _CurrentProcess = _ProcessTable.Table[process];
-            _CurrentPage = _CurrentProcess.GetPage(page);
+            // Set the current process to the process making a memory reference 
+            CurrentProcess = _ProcessTable.Table[process];
+            // Set the current page to the requested page
+            _CurrentPage = CurrentProcess.GetPage(page);
             if (_CurrentPage == null)
             {
                 Console.WriteLine("Failed to get page from page table");
@@ -89,13 +130,17 @@ namespace VirtualMemLib
 
 
             Console.WriteLine("Process {0} Page {1} is being accessed", process, page);
-            if (!_CurrentPage.Resident) //Major page fault
+            // A major page fault is generated if the page's resident value is false
+            if (!_CurrentPage.Resident)
             {
                 int frameIndex;
-                _CurrentProcess.NumFaults++;
+                CurrentProcess.NumFaults++;
+                // Returns the contents of the replaced frame and its index
                 Frame temp = _MMU.PageFault(process, page, out frameIndex);
+                // The current page is now residing in physical memory
                 _CurrentPage.Resident = true;
                 _CurrentPage.FrameIndex = frameIndex;
+                // Set the resident bit to false for the replaced page's page table
                 if (temp != null)
                 {
                     if (_ProcessTable.Table.ContainsKey(temp.Process))
@@ -112,12 +157,11 @@ namespace VirtualMemLib
             {
                 // Get the frame index of the page already in physical memory
                 int frmIndex = _CurrentPage.FrameIndex;
-                // Check if the page is in physical memory
-                // Get the physical memory frame
                 Frame frame = _MMU.GetFrame(frmIndex, process, page);
+                // Simulate accessing the physical memory
                 frame.Access();
             }
-            _CurrentProcess.NumRef++;
+            CurrentProcess.NumRef++;
         }
 
         /// <summary>
@@ -127,7 +171,7 @@ namespace VirtualMemLib
         private void AddProcess(string processName)
         {
             PCB newProc;
-            //Do nothing if the process is alredy in the process table
+            //Do nothing if the process is already in the process table
             if (_ProcessTable.Table.TryGetValue(processName, out newProc))
             {
                 return;
@@ -148,5 +192,19 @@ namespace VirtualMemLib
         {
             Console.WriteLine(_ProcessTable.ToString());
         }
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }
