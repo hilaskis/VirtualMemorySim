@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using VirtualMemLib;
 
 namespace VirtualMemSimConsole
@@ -18,9 +13,12 @@ namespace VirtualMemSimConsole
             OSKernel kernel = new OSKernel(InputFile);
             while (kernel.NextLine())
             {
-                kernel.PrintCurrentState();
+                kernel.PrintFrameTable();
+                kernel.PrintPageTables();
+                Console.WriteLine("-------------------------------------------");
             }
-            kernel.PrintPageTables();
+            
+            kernel.PrintCurrentState();
         }
     }
 }

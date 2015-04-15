@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace VirtualMemLib
 {
@@ -10,7 +6,6 @@ namespace VirtualMemLib
     public class FrameTable
     {
         private Frame[] _Table;
-        private int _TableSize;
 
         public FrameTable(int tableSize)
         {
@@ -20,15 +15,20 @@ namespace VirtualMemLib
                 _Table[i] = new Frame();
                 _Table[i].FrameIndex = i;
             }
-            _TableSize = tableSize;
         }
 
+        /// <summary>
+        /// Property for the frame table
+        /// </summary>
         public Frame[] Table
         {
             get { return _Table; }
-            set { _Table = value; }
+            private set { _Table = value; }
         }
 
+        /// <summary>
+        /// Indexer for the frame table
+        /// </summary>
         public Frame this[int index]
         {
             get
@@ -41,9 +41,14 @@ namespace VirtualMemLib
             }
         }
 
+        /// <summary>
+        /// Finds the frame table index of the specified frame.
+        /// </summary>
+        /// <param name="frame">Positive frame index if it exists in the table, otherwise returns int < 0 </param>
+        /// <returns></returns>
         public int GetIndex(Frame frame)
         {
-            for (int i = 0; i < _TableSize; i++)
+            for (int i = 0; i < _Table.Length; i++)
             {
                 if (_Table[i].Equals(frame))
                 {
@@ -91,18 +96,21 @@ namespace VirtualMemLib
             return -1;
         }
 
-        //public int Contains(string proc, int page)
-        //{
-        //    for (int i = 0; i < _TableSize; i++)
-        //    {
-        //        if (Table[i].Process == proc && Table[i].Page == page)
-        //        {
-        //            return true;
-        //        }
-        //    }
-
-        //    return false;
-        //}
+        /// <summary>
+        /// Returns a string representing the entire contents of the frame table.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder bldr = new StringBuilder();
+            bldr.AppendFormat("---Physical Memory Frame Table---\n");
+            bldr.AppendFormat("Frame#\tProcID\tPage#\n");
+            foreach (var frm in _Table)
+            {
+                bldr.AppendFormat("{0}\t{1}\t{2}\n", frm.FrameIndex, frm.Process, frm.Page);
+            }
+            return bldr.ToString();
+        }
 
     }
 }

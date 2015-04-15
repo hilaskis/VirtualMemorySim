@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtualMemLib
 {
+    // Represents the process table used by the OS kernel
     public class ProcessTable
     {
-
-        Dictionary<string, PCB> _Table;
+        private Dictionary<string, PCB> _Table;
 
         public ProcessTable()
         {
@@ -24,6 +21,9 @@ namespace VirtualMemLib
             get { return _Table; }
         }
 
+        /// <summary>
+        /// Print the contents of all processes' page tables
+        /// </summary>
         public void PrintPageTables()
         {
             foreach(var key in _Table) 
@@ -35,7 +35,7 @@ namespace VirtualMemLib
         /// <summary>
         /// Returns a string representing the status of each process.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String representation of the process table</returns>
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
