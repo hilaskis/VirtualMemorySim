@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace VirtualMemLib
 {
@@ -26,15 +21,9 @@ namespace VirtualMemLib
             _Reader = new StreamReader(inputFile);
         }
 
-        public bool CanGetNextLine
-        {
-            get
-            {
-                return _Reader.EndOfStream;
-            }
-
-        }
-
+        /// <summary>
+        /// The current process making a reference
+        /// </summary>
         public PCB CurrentProcess
         {
             get { return _CurrentProcess; }
@@ -45,6 +34,9 @@ namespace VirtualMemLib
             }
         }
 
+        /// <summary>
+        /// Property used to access the memory management unit of the kernel
+        /// </summary>
         public MemoryManager MMU
         {
             get
@@ -58,6 +50,11 @@ namespace VirtualMemLib
             }
         }
 
+        /// <summary>
+        /// Gets the next line from the input file and attempts to make a memory reference using
+        /// the process and page specified in the line.
+        /// </summary>
+        /// <returns></returns>
         public bool NextLine()
         {
             string[] tokStr;
@@ -89,11 +86,11 @@ namespace VirtualMemLib
         /// <param name="page">The page number/id</param>
         private void ResetResident(string process, int page)
         {
-            PCB temp;
+            PCB pcb;
             try
             {
-                _ProcessTable.Table.TryGetValue(process, out temp);
-                temp.ResetResident(page);
+                _ProcessTable.Table.TryGetValue(process, out pcb);
+                pcb.ResetResident(page);
             }
             catch (ArgumentNullException)
             {
@@ -103,7 +100,12 @@ namespace VirtualMemLib
 
         }
 
-        private void MemReference(string process, int page)
+        /// <summary>
+        /// Request access to the page of the specified process.
+        /// </summary>
+        /// <param name="process">The process requesting a page</param>
+        /// <param name="page">The page number to retrieve</param>
+        public void MemReference(string process, int page)
         {
             
             // Check for an invalid process 
@@ -128,8 +130,8 @@ namespace VirtualMemLib
                 return;
             }
 
+            Console.WriteLine("Process {0} Page {1} is being accessed\n", process, page);
 
-            Console.WriteLine("Process {0} Page {1} is being accessed", process, page);
             // A major page fault is generated if the page's resident value is false
             if (!_CurrentPage.Resident)
             {
@@ -181,6 +183,11 @@ namespace VirtualMemLib
                 newProc = new PCB(processName, NUM_PAGES);
                 _ProcessTable.Table.Add(processName, newProc);
             }
+        }
+
+        public void PrintFrameTable()
+        {
+            Console.WriteLine(_MMU.FrameTable);
         }
 
         public void PrintPageTables()

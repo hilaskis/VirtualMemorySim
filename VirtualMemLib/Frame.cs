@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtualMemLib
 {
+    /// <summary>
+    /// Represents a frame of physical memory
+    /// </summary>
     public class Frame : INotifyPropertyChanged
     {
         private string _Process;
@@ -77,7 +76,7 @@ namespace VirtualMemLib
         //Simulate accessing the physical frame when referencing a page
         public void Access()
         {
-            Console.WriteLine("Physical frame access for process {0} page {1}.", this.Process, this.Page);
+            Console.WriteLine("Physical frame accessed for page {0} from process {1}.\n", this.Page, this.Process);
         }
 
         /// <summary>

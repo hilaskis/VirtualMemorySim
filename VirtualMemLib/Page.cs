@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace VirtualMemLib
 {
@@ -15,15 +10,33 @@ namespace VirtualMemLib
         #region Member Variables
         private int _FrameIndex;
         private bool _Resident;
+        private int _PageNumber;
         #endregion
 
         public Page()
         {
             _FrameIndex = -1;
             _Resident = false;
+            _PageNumber = -1;
         }
 
         #region Properties
+        /// <summary>
+        /// The page number (index) of the page in a page table.
+        /// </summary>
+        public int PageNumber
+        {
+            get
+            {
+                return _PageNumber;
+            }
+            set
+            {
+                _PageNumber = value;
+                OnPropertyChanged("PageNumber");
+            }
+        }
+
         /// <summary>
         /// The physical memory frame where the page is located.
         /// </summary>

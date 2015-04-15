@@ -1,11 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 
 namespace VirtualMemLib
 {
@@ -20,7 +15,6 @@ namespace VirtualMemLib
         private uint _NumFaults = 0;    // Represents the number of page faults encountered during process execution.
         private string _ProcessID;      // Represents the unique name of a process.
         private Page[] _PageTable;      // Page table with 64 entries
-       // private int _TableSize;         //
         #endregion
 
         public PCB(string procName, int tableSize)
@@ -30,16 +24,18 @@ namespace VirtualMemLib
             for (int i = 0; i < tableSize; i++)
             {
                 _PageTable[i] = new Page();
+                _PageTable[i].PageNumber = i;
             }
-           // _TableSize = tableSize;
         }
 
         #region Properties
-
+        /// <summary>
+        /// Property to get the page table
+        /// </summary>
         public Page[] PageTable
         {
             get { return _PageTable; }
-            set { _PageTable = value; }
+            private set { _PageTable = value; }
         }
 
         /// <summary>
@@ -117,16 +113,27 @@ namespace VirtualMemLib
         public Page GetPage(int page)
         {
             if(page >= _PageTable.Length) return null;
+
             //Add a page to the page table if it hasn't been referenced yet.
             if (_PageTable[page] == null)
             {
                 _PageTable[page] = new Page();
-                _NumPages++;
+                _PageTable[page].PageNumber = page;
+            }
+
+            // The page is new if the frame index is < 0
+            if (_PageTable[page].FrameIndex < 0)
+            {
+                NumPages++;
             }
 
             return _PageTable[page];
         }
 
+        /// <summary>
+        /// Resets the resident bit of the specified page number in the process's page table to false.
+        /// </summary>
+        /// <param name="page">Page number to reset the resident bit of</param>
         public void ResetResident(int page)
         {
             if (page < 0 || page >= _PageTable.Length)
@@ -138,37 +145,25 @@ namespace VirtualMemLib
             OnPropertyChanged("PageTable");
         }
 
+
         /// <summary>
-        /// Attempt to access the memory at a specified virtual memory address.
+        /// Prints the entire contents of a process's page table to the console.
         /// </summary>
-        /// <param name="virAddr">The virtual memory address</param>
-        public void MemoryRef(int virAddr)
-        {
-            // Check for invalid address
-            if (virAddr >= _PageTable.Length)
-            {
-                throw new IndexOutOfRangeException("Attempted access to address outside virtual memory size");
-            }
-
-            NumRef++;
-            if (_PageTable[virAddr] == null)
-            {
-                NumPages++;
-                _PageTable[virAddr] = new Page();
-            }
-        }
-
         public void PrintPageTable()
         {
-            Console.WriteLine("Process {0} page table:", ProcessID);
+            Console.WriteLine("---Process {0} Page Table---", ProcessID);
             Console.WriteLine("Index\tFrame\tResident");
             for (int i = 0; i < _PageTable.Length; i++)
             {
-                if (_PageTable[i] == null) return;
+                if (_PageTable[i] == null || _PageTable[i].FrameIndex < 0) return;
                 Console.WriteLine("{0}\t{1}\t{2}", i, _PageTable[i].FrameIndex, _PageTable[i].Resident);
             }
         }
 
+        /// <summary>
+        /// Returns a string with status information about the process.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder buildStr = new StringBuilder();
