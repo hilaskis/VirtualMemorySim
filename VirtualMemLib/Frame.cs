@@ -11,11 +11,26 @@ namespace VirtualMemLib
     {
         private string _Process;
         private int _Page;
+        private int _FrameIndex;
 
         
         public Frame()
         {
             this.Clear();
+        }
+
+        /// <summary>
+        /// The current index of the frame in the frame table.
+        /// </summary>
+        public int FrameIndex
+        {
+            get { return _FrameIndex; }
+           set 
+            { 
+                _FrameIndex = value;
+                OnPropertyChanged("FrameIndex");
+            }
+
         }
 
         /// <summary>

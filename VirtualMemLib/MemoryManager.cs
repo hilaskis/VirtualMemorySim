@@ -64,7 +64,7 @@ namespace VirtualMemLib
             // Add the frame to the head of the list; it is now the most recently referenced page/frame
             _LRUStack.AddFirst(node);
         }
-
+        
         public Frame PageFault(string process, int page, out int frameIndex)
         {
             Frame temp;
@@ -75,7 +75,7 @@ namespace VirtualMemLib
                 temp.Process = process;
                 temp.Page = page;
                 _LRUStack.AddFirst(temp);
-                frameIndex = _FrameTable.GetIndex(temp);
+                frameIndex = temp.FrameIndex;//_FrameTable.GetIndex(temp);
                 return null;
             }
             //Otherwise choose a victim from the LRU stack

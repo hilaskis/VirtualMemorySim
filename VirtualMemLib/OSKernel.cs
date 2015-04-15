@@ -38,7 +38,7 @@ namespace VirtualMemLib
         public PCB CurrentProcess
         {
             get { return _CurrentProcess; }
-            private set
+            set
             { 
                 _CurrentProcess = value;
                 OnPropertyChanged("CurrentProcess");

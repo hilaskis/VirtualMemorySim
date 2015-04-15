@@ -18,6 +18,7 @@ namespace VirtualMemLib
             for (int i = 0; i < tableSize; i++)
             {
                 _Table[i] = new Frame();
+                _Table[i].FrameIndex = i;
             }
             _TableSize = tableSize;
         }

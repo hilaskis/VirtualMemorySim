@@ -36,7 +36,7 @@ namespace VirtualMemLib
             set
             {
                 _FrameIndex = value;
-                OnPropertyChanged("Frame");
+                OnPropertyChanged("FrameIndex");
             }
         }
 
@@ -52,7 +52,7 @@ namespace VirtualMemLib
             set
             {
                 _Resident = value;
-                OnPropertyChanged("Valid");
+                OnPropertyChanged("Resident");
             }
         }
         #endregion

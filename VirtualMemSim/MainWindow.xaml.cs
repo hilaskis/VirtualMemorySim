@@ -21,17 +21,21 @@ namespace VirtualMemSim
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static string LaptopInputFile = @"C:\Programs\VirtualMemorySim\input3a.data";
+        private static string DesktopInputFile = @"C:\Programs\VirtualMemSim\input3a.data";
         private OSKernel _Kernel;
         public MainWindow()
         {
             InitializeComponent();
-            _Kernel = new OSKernel(@"C:\Programs\VirtualMemSim\input3a.data");
+            _Kernel = new OSKernel(LaptopInputFile);
             this.DataContext = _Kernel;
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
             _Kernel.NextLine();
+            pageTableGrid.Visibility = System.Windows.Visibility.Visible;
+            procInfoBorder.Visibility = System.Windows.Visibility.Visible;
         }
 
 
