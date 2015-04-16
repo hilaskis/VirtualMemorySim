@@ -34,6 +34,9 @@ namespace VirtualMemLib
             }
         }
 
+        /// <summary>
+        /// The current page being referenced.
+        /// </summary>
         public Page CurrentPage
         {
             get { return _CurrentPage; }

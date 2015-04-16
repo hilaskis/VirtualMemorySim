@@ -75,7 +75,7 @@ namespace VirtualMemSim
             procInfoGrid.Visibility = System.Windows.Visibility.Visible;
             splitter0.Visibility = System.Windows.Visibility.Visible;
             splitter1.Visibility = System.Windows.Visibility.Visible;
-            while (_Kernel.NextLine());
+            while (_Kernel.NextFault());
             _Kernel.PrintFrameTable();
             _Kernel.PrintPageTables();
             _Kernel.PrintCurrentState();
