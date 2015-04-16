@@ -41,7 +41,7 @@ namespace VirtualMemSim
                 DisableButtons();
             }
 
-  
+            pageDataGrid.Focus();
         }
 
         /// <summary>
@@ -53,6 +53,7 @@ namespace VirtualMemSim
             procInfoGrid.Visibility = System.Windows.Visibility.Visible;
             splitter0.Visibility = System.Windows.Visibility.Visible;
             splitter1.Visibility = System.Windows.Visibility.Visible;
+            pageDataGrid.Focus();
             if (_Kernel.NextFault())
             {
                 _Kernel.PrintFrameTable();
@@ -79,6 +80,7 @@ namespace VirtualMemSim
             _Kernel.PrintPageTables();
             _Kernel.PrintCurrentState();
             DisableButtons();
+            pageDataGrid.Focus();
         }
 
         /// <summary>

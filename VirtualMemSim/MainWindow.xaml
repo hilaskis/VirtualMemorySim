@@ -86,10 +86,14 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Page Table " HorizontalAlignment="Center" Padding="2" Grid.Row="0" TextBlock.FontWeight="Bold" />
-                <DataGrid  Grid.Row="1"  IsReadOnly="True" ItemsSource="{Binding CurrentProcess.PageTable}" 
+                <DataGrid Name="pageDataGrid" Grid.Row="1"  IsReadOnly="True" ItemsSource="{Binding CurrentProcess.PageTable}"
+                           SelectedItem="{Binding CurrentPage}" SelectionMode="Single" SelectionUnit="FullRow"
                         CanUserAddRows="False" CanUserResizeRows="False" MinWidth="225"
                         ScrollViewer.CanContentScroll="True" HorizontalAlignment="Left"
                         ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <DataGrid.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightGreen"/>
+                    </DataGrid.Resources>
                 </DataGrid>
             </Grid>
             

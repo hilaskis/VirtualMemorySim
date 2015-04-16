@@ -34,6 +34,16 @@ namespace VirtualMemLib
             }
         }
 
+        public Page CurrentPage
+        {
+            get { return _CurrentPage; }
+            set
+            {
+                _CurrentPage = value;
+                OnPropertyChanged("CurrentPage");
+            }
+        }
+
         /// <summary>
         /// Property used to access the memory management unit of the kernel
         /// </summary>
@@ -160,8 +170,8 @@ namespace VirtualMemLib
             // Set the current process to the process making a memory reference 
             CurrentProcess = _ProcessTable.Table[process];
             // Set the current page to the requested page
-            _CurrentPage = CurrentProcess.GetPage(page);
-            if (_CurrentPage == null)
+            CurrentPage = CurrentProcess.GetPage(page);
+            if (CurrentPage == null)
             {
                 Console.WriteLine("Failed to get page from page table");
                 return false;
@@ -170,15 +180,15 @@ namespace VirtualMemLib
             Console.WriteLine("Process {0} Page {1} is being accessed\n", process, page);
 
             // A page fault is generated if the page's resident value is false
-            if (!_CurrentPage.Resident)
+            if (!CurrentPage.Resident)
             {
                 int frameIndex;
                 CurrentProcess.NumFaults++;
                 // Returns the contents of the replaced frame and its index
                 Frame temp = _MMU.PageFault(process, page, out frameIndex);
                 // The current page is now residing in physical memory
-                _CurrentPage.Resident = true;
-                _CurrentPage.FrameIndex = frameIndex;
+                CurrentPage.Resident = true;
+                CurrentPage.FrameIndex = frameIndex;
                 // Set the resident bit to false for the replaced page's page table
                 if (temp != null)
                 {
@@ -196,7 +206,7 @@ namespace VirtualMemLib
             else
             {
                 // Get the frame index of the page already in physical memory
-                int frmIndex = _CurrentPage.FrameIndex;
+                int frmIndex = CurrentPage.FrameIndex;
                 Frame frame = _MMU.GetFrame(frmIndex, process, page);
                 // Simulate accessing the physical memory
                 frame.Access();
