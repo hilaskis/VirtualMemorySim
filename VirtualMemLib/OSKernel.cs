@@ -50,30 +50,67 @@ namespace VirtualMemLib
             }
         }
 
+
         /// <summary>
-        /// Gets the next line from the input file and attempts to make a memory reference using
-        /// the process and page specified in the line.
+        /// Reads a line from the input file.
         /// </summary>
-        /// <returns></returns>
-        public bool NextLine()
+        /// <param name="tokens">The parsed parameters of the input line</param>
+        /// <returns>False if the end of the file was reached. True otherwise.</returns>
+        private bool ReadLine(out string[] tokens)
         {
-            string[] tokStr;
-            char[] delimiters = {' ', '\t', ':'};
+            char[] delimiters = { ' ', '\t', ':' };
             string line;
             // Returns false if the end of the file has been reached
             if (_Reader.EndOfStream)
             {
                 _Reader.Close();
+                tokens = null;
                 return false;
             }
 
             //Read the next line from the input file
             line = _Reader.ReadLine();
             //Split the line into process and page reference
-            tokStr = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            //Add the the process to the process table if it is new
-            AddProcess(tokStr[0]);
+            tokens = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
+            return true;
+        }
+
+        /// <summary>
+        /// Reads from the file until the next page fault occurs.
+        /// </summary>
+        /// <returns>True if page fault was generated. False if end of file was reached.</returns>
+        public bool NextFault()
+        {
+            string[] tokStr;
+            do
+            {
+                if (!ReadLine(out tokStr) || tokStr == null)
+                {
+                    return false;
+                }
+
+                AddProcess(tokStr[0]);
+            } while (MemReference(tokStr[0], Convert.ToInt32(tokStr[1], 2)) == false);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the next line from the input file and attempts to make a memory reference using
+        /// the process and page specified in the line.
+        /// </summary>
+        /// <returns>False if the end of the file was reached or a blank line was encountered</returns>
+        public bool NextLine()
+        {
+            string[] tokStr;
+
+            if (!ReadLine(out tokStr) || tokStr == null)
+            {
+                return false;
+            }
+
+            AddProcess(tokStr[0]);
             MemReference(tokStr[0], Convert.ToInt32(tokStr[1],2));
 
             return true;
@@ -105,20 +142,20 @@ namespace VirtualMemLib
         /// </summary>
         /// <param name="process">The process requesting a page</param>
         /// <param name="page">The page number to retrieve</param>
-        public void MemReference(string process, int page)
+        /// <returns>True if the reference generated a fault.</returns>
+        public bool MemReference(string process, int page)
         {
-            
             // Check for an invalid process 
             if (!_ProcessTable.Table.ContainsKey(process))
             {
                 Debug.Print("The process {0} does not exist in the process table\n", process);
-                return;
+                return false;
             }
             // Check for invalid page number
             if (page >= NUM_PAGES)
             {
                 Debug.Print("The page number {0} is outside the virtual address space\n", page);
-                return;
+                return false;
             }
             // Set the current process to the process making a memory reference 
             CurrentProcess = _ProcessTable.Table[process];
@@ -127,12 +164,12 @@ namespace VirtualMemLib
             if (_CurrentPage == null)
             {
                 Console.WriteLine("Failed to get page from page table");
-                return;
+                return false;
             }
 
             Console.WriteLine("Process {0} Page {1} is being accessed\n", process, page);
 
-            // A major page fault is generated if the page's resident value is false
+            // A page fault is generated if the page's resident value is false
             if (!_CurrentPage.Resident)
             {
                 int frameIndex;
@@ -154,6 +191,7 @@ namespace VirtualMemLib
                         Console.WriteLine("OSKernel::MemReference: Process {0} does not exist in process table", process);
                     }
                 }
+                return true;
             }
             else
             {
@@ -164,6 +202,7 @@ namespace VirtualMemLib
                 frame.Access();
             }
             CurrentProcess.NumRef++;
+            return false;
         }
 
         /// <summary>

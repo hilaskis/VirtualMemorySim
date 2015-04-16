@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using VirtualMemLib;
 
 namespace VirtualMemSim
@@ -24,11 +25,70 @@ namespace VirtualMemSim
         /// </summary>
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            _Kernel.NextLine();
             pageTableGrid.Visibility = System.Windows.Visibility.Visible;
             procInfoGrid.Visibility = System.Windows.Visibility.Visible;
             splitter0.Visibility = System.Windows.Visibility.Visible;
             splitter1.Visibility = System.Windows.Visibility.Visible;
+            if (_Kernel.NextLine())
+            {
+                _Kernel.PrintFrameTable();
+                _Kernel.PrintPageTables();
+                Console.WriteLine("-------------------------------------------");
+            }
+            else
+            {
+                _Kernel.PrintCurrentState();
+                DisableButtons();
+            }
+
+  
+        }
+
+        /// <summary>
+        /// Button used to traverse through input file until the next fault.
+        /// </summary>
+        private void runFaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            pageTableGrid.Visibility = System.Windows.Visibility.Visible;
+            procInfoGrid.Visibility = System.Windows.Visibility.Visible;
+            splitter0.Visibility = System.Windows.Visibility.Visible;
+            splitter1.Visibility = System.Windows.Visibility.Visible;
+            if (_Kernel.NextFault())
+            {
+                _Kernel.PrintFrameTable();
+                _Kernel.PrintPageTables();
+            }
+            else
+            {
+                _Kernel.PrintCurrentState();
+                DisableButtons();
+            }
+        }
+
+        /// <summary>
+        /// Button used to traverse through the input file until completion.
+        /// </summary>
+        private void runCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            pageTableGrid.Visibility = System.Windows.Visibility.Visible;
+            procInfoGrid.Visibility = System.Windows.Visibility.Visible;
+            splitter0.Visibility = System.Windows.Visibility.Visible;
+            splitter1.Visibility = System.Windows.Visibility.Visible;
+            while (_Kernel.NextLine());
+            _Kernel.PrintFrameTable();
+            _Kernel.PrintPageTables();
+            _Kernel.PrintCurrentState();
+            DisableButtons();
+        }
+
+        /// <summary>
+        /// Disables all buttons.
+        /// </summary>
+        private void DisableButtons()
+        {
+            runCompleteButton.IsEnabled = false;
+            runFaultButton.IsEnabled = false;
+            nextButton.IsEnabled = false;
         }
 
 
